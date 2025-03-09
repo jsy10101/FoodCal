@@ -2,31 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme Variables */
+:root {
+  /* Base Colors */
+  --color-primary: #10a37f;
+  --color-secondary: #3E3F4B;
+  
+  /* Background Colors */
+  --bg-light: #F7F7F8;
+  --bg-dark: #343541;
+  --surface-light: #FFFFFF;
+  --surface-dark: #1e293b;
+  
+  /* Text Colors */
+  --text-primary-light: #202123;
+  --text-primary-dark: #ECECF1;
+  --text-secondary-light: #6E6E80;
+  --text-secondary-dark: #8E8EA0;
+  
+  /* Border Colors */
+  --border-light: #e5e7eb;
+  --border-dark: rgba(55, 65, 81, 0.5);
+  
+  /* Chart Colors */
+  --chart-breakfast: rgba(251, 146, 60, 0.8);
+  --chart-lunch: rgba(34, 197, 94, 0.8);
+  --chart-dinner: rgba(59, 130, 246, 0.8);
+  --chart-snack: rgba(236, 72, 153, 0.8);
+}
+
 @layer base {
   body {
-    @apply bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-200;
+    @apply bg-[#F7F7F8] dark:bg-[#343541] min-h-screen transition-colors duration-200;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-primary-light dark:bg-primary-dark text-white rounded-lg 
+    @apply px-4 py-2 bg-[--color-primary] text-white rounded-lg 
     hover:opacity-90 transition-all duration-200 disabled:opacity-50;
   }
 
   .btn-secondary {
-    @apply px-3 py-1.5 bg-secondary-light dark:bg-secondary-dark text-white rounded-lg 
+    @apply px-3 py-1.5 bg-[--color-secondary] text-[--text-primary-dark] rounded-lg 
     hover:opacity-90 transition-all duration-200;
   }
 
   .input-field {
-    @apply px-3 py-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 
-    rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark;
+    @apply px-3 py-2 bg-[--surface-light] dark:bg-[--surface-dark] 
+    border border-[--border-light] dark:border-[--border-dark]
+    rounded-lg focus:outline-none focus:ring-2 focus:ring-[--color-primary];
   }
 
   .card {
-    @apply bg-white dark:bg-surface-dark rounded-lg shadow-sm border border-gray-100 dark:border-gray-800;
+    @apply bg-[--surface-light] dark:bg-[--surface-dark] rounded-lg shadow-sm 
+    border border-[--border-light] dark:border-[--border-dark];
   }
+
+  /* Text Utilities */
+  .text-primary {
+    @apply text-[--text-primary-light] dark:text-[--text-primary-dark];
+  }
+
+  .text-secondary {
+    @apply text-[--text-secondary-light] dark:text-[--text-secondary-dark];
+  }
+
+  /* Chart Colors Utilities */
+  .chart-breakfast { color: var(--chart-breakfast); }
+  .chart-lunch { color: var(--chart-lunch); }
+  .chart-dinner { color: var(--chart-dinner); }
+  .chart-snack { color: var(--chart-snack); }
+}
+
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global styles */
+body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Dark mode text colors */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  color: #ECECF1;
+}
+
+/* Remove focus outlines for buttons in dark mode */
+.dark button:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 :root {
@@ -51,14 +130,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -87,7 +158,7 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #4e6880;
     background-color: #ffffff;
   }
   a:hover {
@@ -96,4 +167,10 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* For better font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

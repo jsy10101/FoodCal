@@ -1,15 +1,16 @@
 import { Entry } from "../../types/types";
-import { useMemo } from "react";
-import { useTheme } from "../../hooks/useTheme";
+import { useMemo, useState } from "react";
+import { FoodSearchModal } from "../ui/FoodSearchModal";
 
 interface FoodEntryListProps {
     entries: Entry[];
     onDelete: (id: string) => void;
+    onAddFood: (food: { name: string; calories: number }, mealType: Entry['mealType']) => void;
 }
 
-export const FoodEntryList = ({ entries, onDelete }: FoodEntryListProps) => {
-    const { darkMode } = useTheme();
-    
+export const FoodEntryList = ({ entries, onDelete, onAddFood }: FoodEntryListProps) => {
+    const [selectedMealType, setSelectedMealType] = useState<Entry['mealType'] | null>(null);
+
     const groupedEntries = useMemo(() => {
         const groups: Record<Entry['mealType'], Entry[]> = {
             breakfast: [],
@@ -32,57 +33,81 @@ export const FoodEntryList = ({ entries, onDelete }: FoodEntryListProps) => {
         snack: '🍎'
     };
 
+    const handleAddFood = (food: { name: string; calories: number }) => {
+        if (selectedMealType) {
+            onAddFood(food, selectedMealType);
+            setSelectedMealType(null);
+        }
+    };
+
     if (entries.length === 0) {
         return (
-            <div className={`rounded-lg p-6 text-center ${darkMode ? 'bg-[#1e293b] text-gray-400' : 'bg-white text-gray-500'}`}>
+            <div className="card p-4 text-center text-secondary">
                 No food entries yet. Start by adding your meals!
             </div>
         );
     }
 
     return (
-        <div className="space-y-4">
-            {(Object.entries(groupedEntries) as [Entry['mealType'], Entry[]][]).map(([mealType, mealEntries]) => (
-                mealEntries.length > 0 && (
-                    <div key={mealType} className={`rounded-lg overflow-hidden ${darkMode ? 'bg-[#1e293b]' : 'bg-white shadow-sm'}`}>
-                        <div className={`px-4 py-3 border-b ${darkMode ? 'border-gray-700/50' : 'border-gray-100'}`}>
-                            <div className="flex items-center gap-2">
-                                <span>{mealTypeIcons[mealType]}</span>
-                                <span className={`font-medium capitalize ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                    {mealType}
-                                </span>
-                                <span className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                    ({mealEntries.reduce((sum, entry) => sum + entry.calories, 0)} kcal)
-                                </span>
+        <>
+            <div className="space-y-4">
+                {(Object.entries(groupedEntries) as [Entry['mealType'], Entry[]][]).map(([mealType, mealEntries]) => (
+                    <div key={mealType} className="card overflow-hidden">
+                        <div className="px-4 py-2.5 border-b border-[--border-light] dark:border-[--border-dark]">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span>{mealTypeIcons[mealType]}</span>
+                                    <span className="font-medium capitalize text-primary">
+                                        {mealType}
+                                    </span>
+                                    <span className="text-sm text-secondary">
+                                        ({mealEntries.reduce((sum, entry) => sum + entry.calories, 0)} kcal)
+                                    </span>
+                                </div>
+                                <button
+                                    onClick={() => setSelectedMealType(mealType)}
+                                    className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-[--color-primary] bg-[--bg-light] dark:bg-[--bg-dark] rounded-md hover:opacity-80 transition-opacity"
+                                >
+                                    + Add
+                                </button>
                             </div>
                         </div>
-                        <div className={`divide-y ${darkMode ? 'divide-gray-700/50' : 'divide-gray-100'}`}>
+                        <div className="divide-y divide-[--border-light] dark:divide-[--border-dark]">
                             {mealEntries.map(entry => (
                                 <div
                                     key={entry.id}
-                                    className={`px-4 py-3 flex justify-between items-center ${
-                                        darkMode 
-                                            ? 'hover:bg-gray-800/30 text-gray-200' 
-                                            : 'hover:bg-gray-50 text-gray-700'
-                                    }`}
+                                    className="px-4 py-2.5 flex justify-between items-center text-primary hover:bg-[--bg-light] dark:hover:bg-[--bg-dark]"
                                 >
                                     <span>{entry.foodName}</span>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-[#e2b340]">{entry.calories} kcal</span>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[--color-primary]">
+                                            {entry.calories} kcal
+                                        </span>
                                         <button
                                             onClick={() => onDelete(entry.id)}
-                                            className="text-red-500 hover:text-red-400 text-sm px-3 py-1 
-                                            rounded border border-red-500/30 hover:border-red-400/50 transition-colors"
+                                            className="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                                         >
                                             Delete
                                         </button>
                                     </div>
                                 </div>
                             ))}
+                            {mealEntries.length === 0 && (
+                                <div className="px-4 py-3 text-center text-secondary text-sm">
+                                    No entries for {mealType}
+                                </div>
+                            )}
                         </div>
                     </div>
-                )
-            ))}
-        </div>
+                ))}
+            </div>
+
+            <FoodSearchModal
+                isOpen={selectedMealType !== null}
+                onClose={() => setSelectedMealType(null)}
+                onSelect={handleAddFood}
+                mealType={selectedMealType || 'breakfast'}
+            />
+        </>
     );
 }; 
