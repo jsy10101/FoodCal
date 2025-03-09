@@ -19,8 +19,8 @@ export const useEntries = () => {
         setEntries(entries.filter(entry => entry.id !== id));
     };
 
-    const getTotalCalories = () => {
-        return entries.reduce((sum, entry) => sum + entry.calories, 0);
+    const getTotalCalories = (entriesToSum: Entry[] = entries) => {
+        return entriesToSum.reduce((sum, entry) => sum + entry.calories, 0);
     };
 
     return {

@@ -51,12 +51,14 @@ export const FoodSearchModal = ({ isOpen, onClose, onSelect, mealType }: FoodSea
                                 Add to {mealType}
                             </h2>
                         </div>
+                        <div className='border-t border-[--border-light] dark:border-[--border-dark]'>
                         <button
                             onClick={onClose}
-                            className="text-secondary hover:text-primary transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[--bg-light] dark:hover:bg-[--bg-dark]"
+                            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-secondary bg-[--bg-light] dark:bg-[--bg-dark] hover:text-primary hover:bg-[--bg-light] dark:hover:bg-[--bg-dark] rounded-lg transition-colors"
                         >
                             ✕
                         </button>
+                        </div>
                     </div>
                 </div>
 

@@ -1,50 +1,59 @@
-# React + TypeScript + Vite
+# FoodCal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FoodCal is your personal nutrition companion that makes calorie tracking beautiful and effortless.
 
-Currently, two official plugins are available:
+"Tracking calories shouldn't feel like doing taxes" - Our Design Philosophy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How does it work?
 
-## Expanding the ESLint configuration
+If you want to:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+**Track Your Journey** - Open the calendar view and start logging your meals. Each day shows your progress with beautiful visual indicators, and you can quickly add food entries or view your logs with just a tap.
 
-- Configure the top-level `parserOptions` property like this:
+**See The Big Picture** - Check out the yearly overview that shows your nutrition patterns in a GitHub-style contribution graph. Watch as your daily entries paint a picture of your journey through different shades of green.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+**Stay Organized** - Categorize your meals, track your daily calories, and manage your food logs all in one place. The interface adapts to your needs, whether you're planning ahead or reviewing past entries.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Features
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### 🗓️ Monthly Calendar View
+- Interactive day selection with smooth animations
+- Quick actions for food logging and viewing entries
+- Visual progress indicators for each day
+- System-consistent styling that's easy on the eyes
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### 📊 Yearly Overview
+- Beautiful contribution graph showing your nutrition patterns
+- Color-coded intensity levels that tell your story
+- Full year view with elegant month labels
+- Inspired by GitHub's contribution chart
+
+### 🍽️ Food Logging
+- Effortless meal entry with type categorization
+- Smart calorie tracking with daily summaries
+- Intuitive log management by date
+- Quick actions for common tasks
+
+## Design Philosophy
+
+FoodCal is built with love and attention to detail:
+- Dark mode that's actually pleasant to use
+- Consistent design system that feels natural
+- Responsive layout that works everywhere
+- Smooth animations and transitions
+
+## Tech Stack
+
+Built with modern technologies for the best experience:
+- Next.js for lightning-fast performance
+- Tailwind CSS for beautiful, responsive design
+- TypeScript for rock-solid reliability
+- Modern React patterns and hooks
+
+## Coming Soon
+
+- Weekly nutrition insights and trends
+- Custom food database integration
+- Meal planning features
+- Social sharing capabilities
+- Mobile app companion
