@@ -1,103 +1,28 @@
 // src/App.tsx
-import { useState, useEffect } from "react";
-import styled from "styled-components";
-
-interface Entry {
-    id: string;
-    foodName: string;
-    calories: number;
-    date: string;
-}
-
-const Container = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Arial', sans-serif;
-`;
-
-const Form = styled.form`
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-
-  input {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-
-  button {
-    padding: 0.5rem 1rem;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: #45a049;
-    }
-  }
-`;
-
-const EntryList = styled.div`
-  border: 1px solid #eee;
-  border-radius: 8px;
-  overflow: hidden;
-`;
-
-const EntryItem = styled.div<{ calories: number }>`
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  background-color: ${({ calories }) =>
-      calories < 200 ? "#e8f5e9" : calories < 400 ? "#fffde7" : "#ffebee"};
-  border-bottom: 1px solid #eee;
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const TotalCalories = styled.div`
-  margin-top: 2rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-`;
+import { useState } from "react";
+import { Entry } from "./types/types";
+import { searchFood } from "./services/foodService";
+import { useEntries } from "./hooks/useEntries";
+import { useTheme } from "./hooks/useTheme";
+import { Header } from "./components/layout/Header";
+import { AddFoodForm } from "./components/forms/AddFoodForm";
+import { FoodEntryList } from "./components/entries/FoodEntryList";
+import { TotalCalories } from "./components/ui/TotalCalories";
 
 function App() {
-    const [entries, setEntries] = useState<Entry[]>(() => {
-        const savedEntries = localStorage.getItem("foodCalEntries");
-        return savedEntries ? JSON.parse(savedEntries) : [];
-    });
     const [newFood, setNewFood] = useState("");
-
-    useEffect(() => {
-        localStorage.setItem("foodCalEntries", JSON.stringify(entries));
-    }, [entries]);
+    const [mealType, setMealType] = useState<Entry['mealType']>('breakfast');
+    const { entries, addEntry, deleteEntry, getTotalCalories } = useEntries();
+    const { darkMode, setDarkMode } = useTheme();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newFood.trim()) return;
 
         try {
-            const response = await fetch(
-                `https://api.edamam.com/api/food-database/v2/parser?app_id=${
-                    import.meta.env.VITE_EDAMAM_APP_ID
-                }&app_key=${
-                    import.meta.env.VITE_EDAMAM_APP_KEY
-                }&ingr=${encodeURIComponent(newFood)}`
-            );
-            const data = await response.json();
-
+            const data = await searchFood(newFood);
             const foodItem = data?.hints?.[0]?.food;
+            
             if (foodItem) {
                 const calories = Math.round(foodItem.nutrients.ENERC_KCAL || 0);
                 const newEntry: Entry = {
@@ -105,8 +30,9 @@ function App() {
                     foodName: foodItem.label,
                     calories,
                     date: new Date().toISOString(),
+                    mealType,
                 };
-                setEntries([...entries, newEntry]);
+                addEntry(newEntry);
                 setNewFood("");
             } else {
                 alert("Food not found in database");
@@ -117,36 +43,57 @@ function App() {
         }
     };
 
-    const totalCalories = entries.reduce(
-        (sum, entry) => sum + entry.calories,
-        0
-    );
+    const getMealTypeColor = (type: Entry['mealType']) => {
+        const colors = {
+            breakfast: 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-100',
+            lunch: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-100',
+            dinner: 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-100',
+            snack: 'bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-100'
+        };
+        return colors[type];
+    };
+
+    const mealTypeOptions = [
+        { value: 'breakfast', label: 'Breakfast', icon: '🌅' },
+        { value: 'lunch', label: 'Lunch', icon: '🍱' },
+        { value: 'dinner', label: 'Dinner', icon: '🍽️' },
+        { value: 'snack', label: 'Snack', icon: '🍎' },
+    ];
 
     return (
-        <Container>
-            <h1>FoodCal Tracker</h1>
+        <div className={`min-h-screen transition-colors duration-200 ${darkMode ? 'bg-[#0f172a]' : 'bg-gray-50'}`}>
+            <div className="h-full">
+                <div className="p-6">
+                    <Header 
+                        darkMode={darkMode}
+                        onThemeToggle={() => setDarkMode(!darkMode)}
+                    />
 
-            <Form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    value={newFood}
-                    onChange={(e) => setNewFood(e.target.value)}
-                    placeholder="Enter food item..."
-                />
-                <button type="submit">Add Food</button>
-            </Form>
+                    <div className="flex flex-col xl:flex-row">
+                        <div className="flex-1 space-y-6">
+                            <AddFoodForm
+                                newFood={newFood}
+                                mealType={mealType}
+                                onFoodChange={setNewFood}
+                                onMealTypeChange={setMealType}
+                                onSubmit={handleSubmit}
+                            />
 
-            <EntryList>
-                {entries.map((entry) => (
-                    <EntryItem key={entry.id} calories={entry.calories}>
-                        <span>{entry.foodName}</span>
-                        <span>{entry.calories} kcal</span>
-                    </EntryItem>
-                ))}
-            </EntryList>
+                            <FoodEntryList
+                                entries={entries}
+                                onDelete={deleteEntry}
+                            />
+                        </div>
 
-            <TotalCalories>Total Calories: {totalCalories} kcal</TotalCalories>
-        </Container>
+                        <div className="xl:w-[350px] xl:ml-6 mt-6 xl:mt-0">
+                            <div className="sticky top-6">
+                                <TotalCalories calories={getTotalCalories()} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
