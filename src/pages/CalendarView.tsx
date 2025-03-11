@@ -9,7 +9,6 @@ import {
     isToday,
     startOfWeek,
     endOfWeek,
-    eachMonthOfInterval,
     startOfYear,
     endOfYear,
     getDay,
@@ -25,8 +24,6 @@ interface CalendarViewProps {
 
 export const CalendarView = ({
     entries,
-    onDateSelect,
-    selectedDate,
     onViewLog,
 }: CalendarViewProps) => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -68,14 +65,12 @@ export const CalendarView = ({
     const getContributionData = () => {
         const now = new Date();
         const start = startOfYear(now);
-        const end = endOfYear(now); // Show full year instead of current date
+        const end = endOfYear(now);
         const days = eachDayOfInterval({ start, end });
 
-        // Create week arrays
         const weeks: Date[][] = [];
         let currentWeek: Date[] = [];
 
-        // Fill in the first week with empty spaces
         const firstDayOfWeek = getDay(start);
         for (let i = 0; i < firstDayOfWeek; i++) {
             currentWeek.push(null as any);
@@ -90,9 +85,7 @@ export const CalendarView = ({
             }
         });
 
-        // Add remaining days
         if (currentWeek.length > 0) {
-            // Fill the last week with null values if needed
             while (currentWeek.length < 7) {
                 currentWeek.push(null as any);
             }
@@ -114,32 +107,6 @@ export const CalendarView = ({
 
     const weeks = getContributionData();
     const totalEntries = entries.length;
-
-    // Calculate month label positions
-    const getMonthLabelPositions = () => {
-        const now = new Date();
-        const yearStart = startOfYear(now);
-        const yearEnd = endOfYear(now);
-        const months = eachMonthOfInterval({ start: yearStart, end: yearEnd });
-        const totalWeeks = Math.ceil(
-            (yearEnd.getTime() - yearStart.getTime()) /
-                (7 * 24 * 60 * 60 * 1000)
-        );
-
-        return months.map((month) => {
-            const startOfMonthWeek = startOfWeek(startOfMonth(month));
-            const weeksSinceStart = Math.floor(
-                (startOfMonthWeek.getTime() - yearStart.getTime()) /
-                    (7 * 24 * 60 * 60 * 1000)
-            );
-            // Calculate position as percentage of total weeks
-            const percentage = (weeksSinceStart / totalWeeks) * 100;
-            return {
-                month,
-                percentage,
-            };
-        });
-    };
 
     return (
         <div className="space-y-6">
@@ -200,12 +167,14 @@ export const CalendarView = ({
                         const isCurrentDay = isToday(day);
 
                         return (
-                            <div key={day.toISOString()} className="relative group">
-                                <button
-                                    onClick={() => handleDayClick(day)}
-                                    disabled={!isCurrentMonth}
+                            <div 
+                                key={day.toISOString()} 
+                                className="relative group"
+                                onClick={() => isCurrentMonth && handleDayClick(day)}
+                            >
+                                <div
                                     className={`
-                                        relative w-full min-h-[80px] p-2 text-left rounded-lg border transition-all overflow-hidden
+                                        relative w-full min-h-[80px] p-2 text-left rounded-lg border transition-all overflow-hidden cursor-pointer
                                         ${!isCurrentMonth ? "opacity-30 cursor-default" : "hover:border-[--color-primary] hover:shadow-sm"}
                                         ${isSelected 
                                             ? "border-[--color-primary] bg-[--bg-light] dark:bg-[--bg-dark] shadow-sm" 
@@ -247,30 +216,9 @@ export const CalendarView = ({
                                                     View
                                                 </button>
                                             )}
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    onDateSelect(day);
-                                                }}
-                                                className="text-[10px] px-2 py-1 rounded bg-[--color-primary] text-white hover:bg-[--color-primary]/90 transition-colors"
-                                            >
-                                                Add
-                                            </button>
                                         </div>
                                     )}
-
-                                    {hasEntries && (
-                                        <div className="absolute bottom-[2px] left-1.5 right-1.5 h-0.5 bg-[--color-primary]/10 rounded-full overflow-hidden">
-                                            <div 
-                                                className="h-full bg-[--color-primary]" 
-                                                style={{
-                                                    width: `${Math.min((totalCalories / 2500) * 100, 100)}%`,
-                                                    transition: "width 0.3s ease-in-out",
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-                                </button>
+                                </div>
                             </div>
                         );
                     })}
@@ -321,27 +269,15 @@ export const CalendarView = ({
 
                                         return (
                                             <button
-                                                key={
-                                                    day
-                                                        ? day.toISOString()
-                                                        : dayIndex
-                                                }
-                                                onClick={() =>
-                                                    day && handleDayClick(day)
-                                                }
+                                                key={day ? day.toISOString() : dayIndex}
+                                                onClick={() => day && handleDayClick(day)}
                                                 disabled={!day}
                                                 className={`${baseClasses} ${colorClasses} ${
-                                                    day &&
-                                                    "hover:ring-1 hover:ring-[#40c463]/30"
+                                                    day && "hover:ring-1 hover:ring-[#40c463]/30"
                                                 }`}
                                                 title={
                                                     day
-                                                        ? `${format(
-                                                              day,
-                                                              "MMM d, yyyy"
-                                                          )}: ${getTotalCaloriesForDate(
-                                                              day
-                                                          )} calories`
+                                                        ? `${format(day, "MMM d, yyyy")}: ${getTotalCaloriesForDate(day)} calories`
                                                         : ""
                                                 }
                                             />
