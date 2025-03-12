@@ -14,47 +14,60 @@ If you want to:
 
 **Stay Organized** - Categorize your meals, track your daily calories, and manage your food logs all in one place. The interface adapts to your needs, whether you're planning ahead or reviewing past entries.
 
+## App Preview
+
+<div align="center">
+  <img src="screenshots/food_log.png" alt="Food Log" width="800"/>
+  <br />  
+  <img src="screenshots/calendar_view.png" alt="Calendar View" width="800"/>
+</div>
+
 ## Features
 
 ### 🗓️ Monthly Calendar View
-- Interactive day selection with smooth animations
-- Quick actions for food logging and viewing entries
-- Visual progress indicators for each day
-- System-consistent styling that's easy on the eyes
+
+-   Interactive day selection with smooth animations
+-   Quick actions for food logging and viewing entries
+-   Visual progress indicators for each day
+-   System-consistent styling that's easy on the eyes
 
 ### 📊 Yearly Overview
-- Beautiful contribution graph showing your nutrition patterns
-- Color-coded intensity levels that tell your story
-- Full year view with elegant month labels
-- Inspired by GitHub's contribution chart
+
+-   Beautiful contribution graph showing your nutrition patterns
+-   Color-coded intensity levels that tell your story
+-   Full year view with elegant month labels
+-   Inspired by GitHub's contribution chart
 
 ### 🍽️ Food Logging
-- Effortless meal entry with type categorization
-- Smart calorie tracking with daily summaries
-- Intuitive log management by date
-- Quick actions for common tasks
+
+-   Effortless meal entry with type categorization
+-   Smart calorie tracking with daily summaries
+-   Intuitive log management by date
+-   Quick actions for common tasks
 
 ## Design Philosophy
 
 FoodCal is built with love and attention to detail:
-- Dark mode that's actually pleasant to use
-- Consistent design system that feels natural
-- Responsive layout that works everywhere
-- Smooth animations and transitions
+
+-   Dark mode that's actually pleasant to use
+-   Consistent design system that feels natural
+-   Responsive layout that works everywhere
+-   Smooth animations and transitions
 
 ## Tech Stack
 
 Built with modern technologies for the best experience:
-- React + Vite for fast development and performance
-- Tailwind CSS for beautiful, responsive design
-- TypeScript for type safety and reliability
-- Firebase (Firestore) for backend and real-time data
-- Modern React patterns and hooks
+
+-   React + Vite for fast development and performance
+-   Tailwind CSS for beautiful, responsive design
+-   TypeScript for type safety and reliability
+-   Firebase (Firestore) for backend and real-time data
+-   Modern React patterns and hooks
 
 ## Coming Soon
 
-- Weekly nutrition insights and trends
-- Custom food database integration
-- Meal planning features
-- Social sharing capabilities
-- Mobile app companion
+-   Weekly nutrition insights and trends
+-   Custom food database integration
+-   Meal planning features
+-   Social sharing capabilities
+-   Mobile app companion
