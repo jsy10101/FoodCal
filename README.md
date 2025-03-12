@@ -45,9 +45,10 @@ FoodCal is built with love and attention to detail:
 ## Tech Stack
 
 Built with modern technologies for the best experience:
-- Next.js for lightning-fast performance
+- React + Vite for fast development and performance
 - Tailwind CSS for beautiful, responsive design
-- TypeScript for rock-solid reliability
+- TypeScript for type safety and reliability
+- Firebase (Firestore) for backend and real-time data
 - Modern React patterns and hooks
 
 ## Coming Soon
